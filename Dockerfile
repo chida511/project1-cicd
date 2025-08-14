@@ -1,13 +1,26 @@
-##artifact build stage
+## Artifact build stage
 FROM maven AS buildstage
-RUN mkdir /opt/mindcircuit13
-WORKDIR /opt/mindcircuit13
-COPY . .
-RUN mvn clean install    ## artifact -- .war
+# Create a working directory for your project
+RUN mkdir /opt/project1-cicd
+WORKDIR /opt/project1-cicd
 
-### tomcat deploy stage
+# Copy all project files
+COPY . .
+
+# Build the artifact (.war)
+RUN mvn clean install
+
+### Tomcat deploy stage
 FROM tomcat
-WORKDIR webapps
-COPY --from=buildstage /opt/mindcircuit13/target/*.war .
+
+# Set the working directory to webapps
+WORKDIR /usr/local/tomcat/webapps
+
+# Copy the WAR file from the build stage
+COPY --from=buildstage /opt/project1-cicd/target/*.war .
+
+# Remove default ROOT and rename WAR to ROOT.war
 RUN rm -rf ROOT && mv *.war ROOT.war
+
+# Expose default Tomcat port
 EXPOSE 8080
