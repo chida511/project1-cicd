@@ -1,25 +1,21 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mc-app
+  name: project1-cicd
   labels:
-    app: mc-app
+    app: project1-cicd
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: mc-app
+      app: project1-cicd
   template:
     metadata:
       labels:
-        app: mc-app
+        app: project1-cicd
     spec:
       containers:
-      - name: mc-app
-        image: devopshubg333/batch13:5
+      - name: project1-cicd
+        image: chida511/project1-cicd:${BUILD_NUMBER}
         ports:
         - containerPort: 8080
-
-  
-
